@@ -1,29 +1,13 @@
-<x-layout titre="Détails de l'équipement">
+<x-layout titre="Modifier l'équipement">
 
-    <!-- Styles CSS optimisés -->
+    <!-- Styles CSS identiques à la page de détails -->
     <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-hover: #1d4ed8;
-            --success: #10b981;
-            --success-hover: #059669;
-            --warning: #f59e0b;
-            --warning-hover: #d97706;
-            --slate-50: #f8fafc;
-            --slate-100: #f1f5f9;
-            --slate-200: #e2e8f0;
-            --slate-300: #cbd5e1;
-            --slate-600: #475569;
-            --slate-700: #334155;
-            --slate-800: #1e293b;
-        }
-
-        .detail-container {
-            max-width: 1100px;
+        .edit-container {
+            max-width: 900px;
             margin: 30px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #334155;
             padding: 0 20px;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--slate-700);
         }
 
         /* Barre d'actions supérieure */
@@ -32,293 +16,147 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            gap: 15px;
         }
 
         .back-link {
             text-decoration: none;
-            color: var(--primary);
+            color: #3b82f6;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: color 0.2s ease;
         }
 
         .back-link:hover {
-            color: var(--primary-hover);
+            color: #1d4ed8;
         }
 
-        .btn-edit {
-            text-decoration: none;
-            background-color: var(--warning);
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.95em;
-            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-        }
-
-        .btn-edit:hover {
-            background-color: var(--warning-hover);
-            box-shadow: 0 6px 8px -1px rgba(217, 119, 6, 0.3);
-        }
-
-        .btn-edit:active {
-            transform: scale(0.98);
-        }
-
-        /* Titre de l'équipement */
-        .device-title {
+        /* Titre principal */
+        .page-title {
             font-size: 1.8em;
-            color: var(--slate-800);
+            color: #1e293b;
             margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Fiche technique de l'appareil */
-        .spec-card {
-            background-color: #ffffff;
-            padding: 28px;
-            border-radius: 10px;
-            border: 1px solid var(--slate-200);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .spec-card:hover {
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-        }
-
-        .spec-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .spec-label {
-            font-size: 0.8em;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--slate-600);
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        .spec-value {
-            font-size: 1.05em;
-            font-weight: 600;
-            color: var(--slate-800);
-        }
-
-        .spec-code {
-            background-color: var(--slate-100);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 0.9em;
-            color: var(--slate-800);
-            border: 1px solid var(--slate-200);
-        }
-
-        /* Badge d'état dynamique */
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            text-align: center;
-            width: fit-content;
-        }
-        .status-neuf { background-color: #dcfce7; color: #15803d; }
-        .status-bon { background-color: #dbeafe; color: #1d4ed8; }
-        .status-panne { background-color: #fee2e2; color: #b91c1c; }
-        .status-reparation { background-color: #fef3c7; color: #b45309; }
-
-        .spec-description {
-            grid-column: 1 / -1;
-            border-top: 1px solid var(--slate-100);
-            padding-top: 20px;
-            margin-top: 5px;
-        }
-
-        /* Zone d'affichage des catégories */
-        .categories-list {
-            margin-top: 5px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .category-badge {
-            background-color: var(--slate-50);
-            color: var(--slate-600);
-            font-size: 0.8em;
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--slate-200);
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Message flash de succès */
-        .success-alert {
-            padding: 14px 20px;
-            background-color: #ecfdf5;
-            color: #065f46;
-            border-radius: 8px;
             margin-bottom: 25px;
-            border: 1px solid #a7f3d0;
-            font-weight: 600;
-            font-size: 0.95em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.05);
-        }
-
-        /* Layout à deux colonnes */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 40px;
-            margin-top: 25px;
-        }
-
-        /* Titres des sections */
-        .section-title {
-            font-size: 1.3em;
-            color: var(--slate-800);
-            margin-top: 0;
-            margin-bottom: 20px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        /* Historique des interventions */
-        .intervention-list {
-            padding-left: 0;
-            list-style: none;
-            margin: 0;
-        }
-
-        .intervention-item {
-            margin-bottom: 16px;
-            padding: 18px;
-            background-color: #ffffff;
-            border-left: 4px solid var(--primary);
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            border-top: 1px solid var(--slate-200);
-            border-right: 1px solid var(--slate-200);
-            border-bottom: 1px solid var(--slate-200);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .intervention-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .intervention-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85em;
-            color: var(--slate-600);
-            margin-bottom: 10px;
-        }
-
-        .intervention-comment {
-            margin: 0;
-            font-style: italic;
-            color: var(--slate-700);
-            line-height: 1.5;
-        }
-
-        .empty-state {
-            color: var(--slate-600);
-            font-style: italic;
-            padding: 30px;
-            background-color: var(--slate-50);
-            border: 2px dashed var(--slate-300);
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* Formulaire d'ajout d'intervention */
+        /* Carte de formulaire */
         .form-card {
-            background-color: var(--slate-50);
-            padding: 24px;
-            border-radius: 10px;
-            border: 1px solid var(--slate-200);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         .form-label {
             font-weight: 600;
-            color: var(--slate-700);
+            color: #475569;
             font-size: 0.9em;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 11px 14px;
             border-radius: 6px;
-            border: 1px solid var(--slate-300);
+            border: 1px solid #cbd5e1;
             box-sizing: border-box;
-            font-size: 0.9em;
+            font-size: 0.95em;
             background-color: #ffffff;
-            color: var(--slate-800);
+            color: #1e293b;
             transition: all 0.2s ease;
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
+        /* Grille des cases à cocher pour catégories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            background-color: #f8fafc;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .category-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        /* Zone des boutons */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 10px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 20px;
+        }
+
+        .btn-cancel {
+            text-decoration: none;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e2e8f0;
+        }
+
         .btn-submit {
-            background-color: var(--success);
-            color: white;
+            background-color: #f59e0b;
+            color: #ffffff;
             border: none;
-            padding: 12px 15px;
+            padding: 12px 24px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            width: 100%;
             font-size: 0.95em;
-            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
             transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         .btn-submit:hover {
-            background-color: var(--success-hover);
+            background-color: #d97706;
         }
 
         .btn-submit:active {
@@ -332,178 +170,88 @@
             margin-top: 5px;
             font-weight: 500;
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .action-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .btn-edit {
-                width: 100%;
-                justify-content: center;
-            }
-        }
     </style>
 
-    <div class="detail-container">
+    <div class="edit-container">
         <!-- Barre d'actions supérieure -->
         <div class="action-bar">
-            <a href="/" class="back-link">
-                <!-- Icône Flèche Retour -->
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Retour à la liste des équipements
-            </a>
-            <!-- BOUTON DE MODIFICATION -->
-            <a href="{{ route('dev.edit', $device->id) }}" class="btn-edit">
-                <!-- Icône Crayon -->
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                Modifier cet équipement
+            <a href="{{ route('device.show', $device->id) }}" class="back-link">
+                ← Annuler et revenir aux détails
             </a>
         </div>
 
-        <h1 class="device-title">
-            <!-- Icône Équipement -->
-            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--slate-600);"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
-            Type Équipement : {{ $device->nom }}
-        </h1>
-        
-        <!-- Fiche technique de l'appareil -->
-        <div class="spec-card">
-            <div class="spec-group">
-                <span class="spec-label">Marque</span>
-                <span class="spec-value">{{ $device->marque ?? 'Non spécifiée' }}</span>
-            </div>
-            
-            <div class="spec-group">
-                <span class="spec-label">N° Série</span>
-                <span class="spec-value"><code class="spec-code">{{ $device->numero_serie }}</code></span>
-            </div>
+        <h1 class="page-title">Modifier l'équipement : {{ $device->nom }}</h1>
 
-            <div class="spec-group">
-                <span class="spec-label">État actuel</span>
-                <span class="spec-value">
-                    <span class="status-badge 
-                        {{ $device->etat == 'Neuf' ? 'status-neuf' : '' }}
-                        {{ $device->etat == 'Bon état' ? 'status-bon' : '' }}
-                        {{ $device->etat == 'En panne' ? 'status-panne' : '' }}
-                        {{ $device->etat == 'En réparation' ? 'status-reparation' : '' }}">
-                        {{ $device->etat }}
-                    </span>
-                </span>
-            </div>
+        <div class="form-card">
+            <form action="{{ route('dev.update', $device->id) }}" method="POST">
+                @csrf
+                @method('PUT')
 
-            <!-- Affichage des catégories -->
-            <div class="spec-group">
-                <span class="spec-label">Catégories</span>
-                <div class="categories-list">
-                    @forelse($device->categories as $category)
-                        <span class="category-badge">
-                            <!-- Icône Dossier -->
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                            {{ $category->nom }}
-                        </span>
-                    @empty
-                        <span style="color: #94a3b8; font-style: italic; font-size: 0.9em;">Aucune</span>
-                    @endforelse
-                </div>
-            </div>
-
-            <div class="spec-group spec-description">
-                <span class="spec-label">Description</span>
-                <span class="spec-value" style="font-weight: normal; color: var(--slate-600); line-height: 1.5;">
-                    {{ $device->description ?? 'Aucune description' }}
-                </span>
-            </div>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--slate-200); margin: 30px 0;">
-
-        @if(session('success'))
-            <div class="success-alert">
-                <!-- Icône Coche de validation -->
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="grid-layout">
-            
-            <!-- SECTION 1 : Historique des interventions -->
-            <div class="column-left">
-                <h2 class="section-title">
-                    <!-- Icône Historique -->
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Historique des interventions
-                </h2>
-                
-                <ul class="intervention-list">
-                    @forelse($device->interventions as $intervention)
-                        <li class="intervention-item">
-                            <div class="intervention-meta">
-                                <span><strong>Type :</strong> {{ $intervention->type }}</span>
-                                <span>Fait le : {{ date('d/m/Y', strtotime($intervention->date)) }}</span>
-                            </div>
-                            <p class="intervention-comment">
-                                " {{ $intervention->commentaire }} "
-                            </p>
-                        </li>
-                    @empty
-                        <li class="empty-state">Aucune intervention enregistrée pour le moment.</li>
-                    @endforelse
-                </ul>
-            </div>
-
-            <!-- SECTION 2 : Nouveau Formulaire d'ajout d'intervention -->
-            <div class="column-right">
-                <div class="form-card">
-                    <h3 class="section-title" style="font-size: 1.15em; margin-bottom: 15px;">
-                        <!-- Icône Plus / Ajouter -->
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Ajouter une intervention
-                    </h3>
+                <div class="form-grid">
                     
-                    <form action="{{ route('intervention.store', $device->id) }}" method="POST">
-                        @csrf
-                        
-                        <!-- Champ Date -->
-                        <div class="form-group">
-                            <label for="date" class="form-label">Date de l'intervention :</label>
-                            <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-input" required>
-                        </div>
+                    <!-- Nom de l'équipement -->
+                    <div class="form-group">
+                        <label for="nom" class="form-label">Nom de l'équipement *</label>
+                        <input type="text" name="nom" id="nom" class="form-input" value="{{ old('nom', $device->nom) }}" required>
+                        @error('nom')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                        <!-- Champ Type d'intervention -->
-                        <div class="form-group">
-                            <label for="type" class="form-label">Type d'intervention :</label>
-                            <select name="type" id="type" class="form-select" required>
-                                <option value="">-- Choisir un type --</option>
-                                <option value="Maintenance préventive">Maintenance préventive</option>
-                                <option value="Dépannage / Réparation">Dépannage / Réparation</option>
-                                <option value="Mise à jour système">Mise à jour système</option>
-                                <option value="Nettoyage matériel">Nettoyage matériel</option>
-                            </select>
-                        </div>
+                    <!-- Marque -->
+                    <div class="form-group">
+                        <label for="marque" class="form-label">Marque</label>
+                        <input type="text" name="marque" id="marque" class="form-input" value="{{ old('marque', $device->marque) }}">
+                        @error('marque')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                        <!-- Champ Commentaire -->
-                        <div class="form-group">
-                            <label for="commentaire" class="form-label">Commentaire :</label>
-                            <textarea name="commentaire" id="commentaire" rows="4" class="form-textarea" placeholder="Détaillez vos observations et actions réalisées..." required></textarea>
-                            @error('commentaire')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <!-- Numéro de série -->
+                    <div class="form-group">
+                        <label for="numero_serie" class="form-label">Numéro de série *</label>
+                        <input type="text" name="numero_serie" id="numero_serie" class="form-input" value="{{ old('numero_serie', $device->numero_serie) }}" required>
+                        @error('numero_serie')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                        <button type="submit" class="btn-submit">
-                            Enregistrer l'intervention
-                        </button>
-                    </form>
+                    <!-- État actuel -->
+                    <div class="form-group">
+                        <label for="etat" class="form-label">État actuel *</label>
+                        <select name="etat" id="etat" class="form-select" required>
+                            @php $currentEtat = old('etat', $device->etat); @endphp
+                            <option value="Neuf" {{ $currentEtat == 'Neuf' ? 'selected' : '' }}>Neuf</option>
+                            <option value="Bon état" {{ $currentEtat == 'Bon état' ? 'selected' : '' }}>Bon état</option>
+                            <option value="En panne" {{ $currentEtat == 'En panne' ? 'selected' : '' }}>En panne</option>
+                            <option value="En réparation" {{ $currentEtat == 'En réparation' ? 'selected' : '' }}>En réparation</option>
+                        </select>
+                        @error('etat')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    
+                    <!-- Description -->
+                    <div class="form-group full-width">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" rows="4" class="form-textarea" placeholder="Détails complémentaires sur l'équipement...">{{ old('description', $device->description) }}</textarea>
+                        @error('description')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
-            </div>
 
+                <!-- Actions du formulaire -->
+                <div class="form-actions">
+                    <a href="{{ route('device.show', $device->id) }}" class="btn-cancel">Annuler</a>
+                    <button type="submit" class="btn-submit">
+                        Mettre à jour l'équipement
+                    </button>
+                </div>
+
+            </form>
         </div>
     </div>
 

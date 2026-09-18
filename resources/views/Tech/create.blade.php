@@ -156,7 +156,7 @@
                 <select name="room_id" id="room_id" class="form-select" required>
                     <option value="">-- Choisir une salle existante --</option>
                     @foreach($rooms as $room)
-                        <option value="{{ $room->id }}">{{ $room->nom }}</option>
+                        <option value="{{ $room->id }}">{{ $room->nom }} du {{ $room->batiment }}</option>
                     @endforeach
                 </select>
             </div>
@@ -167,7 +167,7 @@
                 <div class="categories-grid">
                     @foreach($categories as $category)
                         <label class="checkbox-label">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id }}" class="checkbox-input">
+                            <input type="radio" name="categories[]" value="{{ $category->id }}" class="radio-input">
                             {{ $category->nom }}
                         </label>
                     @endforeach

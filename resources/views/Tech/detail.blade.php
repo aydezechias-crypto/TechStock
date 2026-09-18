@@ -15,6 +15,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .back-link {
@@ -40,6 +48,8 @@
             font-size: 0.95em;
             box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
             transition: background-color 0.2s ease, transform 0.1s ease;
+            display: inline-flex;
+            align-items: center;
         }
 
         .btn-edit:hover {
@@ -47,6 +57,38 @@
         }
 
         .btn-edit:active {
+            transform: scale(0.98);
+        }
+
+        /* Styles pour le bouton de suppression */
+        .btn-delete-form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95em;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-danger:active {
             transform: scale(0.98);
         }
 
@@ -288,13 +330,25 @@
         <!-- Barre d'actions supérieure -->
         <div class="action-bar">
             <a href="/" class="back-link">← Retour à la liste des équipements</a>
-            <!-- BOUTON DE MODIFICATION -->
-            <a href="{{ route('dev.edit', $device->id) }}" class="btn-edit">
-                Modifier cet équipement ✏️
-            </a>
+            
+            <div class="action-buttons">
+                <!-- BOUTON DE MODIFICATION -->
+                <a href="{{ route('dev.edit', $device->id) }}" class="btn-edit">
+                    Modifier cet équipement ✏️
+                </a>
+                
+                <!-- BOUTON DE SUPPRESSION -->
+                <form action="{{ route('dev.destroy', $device->id) }}" method="POST" class="btn-delete-form" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet équipement ?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-danger">
+                        Supprimer 🗑️
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <h1 class="device-title">Type Équipement : {{ $device->nom }}</h1>
+        <h1 class="device-title">Nom de L'equipement : {{ $device->nom }}</h1>
         
         <!-- Fiche technique de l'appareil -->
         <div class="spec-card">
@@ -308,10 +362,14 @@
                 <span class="spec-value"><code class="spec-code">{{ $device->numero_serie }}</code></span>
             </div>
 
+             <div class="spec-group">
+                <span class="spec-label">Date d'Achat</span>
+                <span class="spec-value"><code class="spec-code">{{ $device->date_achat }}</code></span>
+            </div>
+
             <div class="spec-group">
                 <span class="spec-label">État actuel</span>
                 <span class="spec-value">
-                    <!-- Badge d'état coloré en fonction de la valeur -->
                     <span class="status-badge 
                         {{ $device->etat == 'Neuf' ? 'status-neuf' : '' }}
                         {{ $device->etat == 'Bon état' ? 'status-bon' : '' }}

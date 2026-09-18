@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('batiment');
             $table->integer('capacite');
             $table->timestamps();
+
+                 // Contrainte d'unicité composée sur les deux colonnes
+            $table->unique(['nom', 'batiment']);
         });
     }
 

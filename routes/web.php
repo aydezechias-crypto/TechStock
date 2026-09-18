@@ -3,7 +3,7 @@ use App\Http\Controllers\TechController;
 use Illuminate\Support\Facades\Route;
 
 // 1. Routes d'affichage fixes (toujours en premier)
-Route::get('/', [ TechController::class, 'index' ]);
+Route::get('/', [ TechController::class, 'index' ]) ->name('dev.index');
 Route::get('/create', [TechController::class,'create'])->name('dev.create');
 Route::get('/categorie',[ TechController::class, 'category'])->name('categorie');
 Route::get('/salle',[TechController::class, 'room'])->name('salle');
@@ -19,3 +19,8 @@ Route::get('/salle/{id}', [TechController::class, 'showRoom'])->name('salle.show
 Route::get('/{id}', [TechController::class, 'showDevice'])->name('device.show');
 Route::get('/{id}/edit', [TechController::class, 'edit'])->name('dev.edit'); // Formulaire modification
 Route::post('/{id}/intervention', [TechController::class, 'storeIntervention'])->name('intervention.store');
+
+// 4. Routes de suppression (DELETE)
+Route::delete('/{id}', [TechController::class, 'destroyDevice'])->name('dev.destroy');
+Route::delete('/categorie/{id}', [TechController::class, 'destroyCategory'])->name('cat.destroy');
+Route::delete('/salle/{id}', [TechController::class, 'destroyRoom'])->name('salle.destroy');

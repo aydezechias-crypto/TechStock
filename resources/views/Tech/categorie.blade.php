@@ -117,6 +117,7 @@
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Aligne le nom à gauche et le bouton à droite */
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
@@ -127,9 +128,41 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
+        .category-info {
+            display: flex;
+            align-items: center;
+        }
+
         .category-icon {
             margin-right: 12px;
             color: #64748b;
+        }
+
+        /* Style revu du bouton de suppression */
+        .btn-supp {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-supp:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+        }
+
+        .btn-supp:active {
+            transform: scale(0.95);
         }
 
         .empty-message {
@@ -155,7 +188,7 @@
                     <label class="form-label">Nom de la Catégorie :</label>
                     <input type="text" name="nom" class="form-input" value="{{ old('nom') }}" placeholder="Ex: Ordinateur portable" required>
                     @error('nom')
-                        <span class="error-message">Veuillez renvoyer un nom de catégorie valide.</span>
+                        <span class="error-message">Cette catégorie existe déjà.</span>
                     @enderror
                 </div>
                 
@@ -171,8 +204,19 @@
             <ul class="category-list">
                 @forelse($categories as $category)
                     <li class="category-item">
-                        <span class="category-icon">📁</span>
-                        <span>{{ $category->nom }}</span>
+                        <div class="category-info">
+                            <span class="category-icon">📁</span>
+                            <span>{{ $category->nom }}</span>
+                        </div>
+
+                        <!-- Formulaire de suppression de catégorie -->
+                        <form action="{{ route('cat.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Supprimer cette catégorie ?');" style="margin: 0;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-supp" title="Supprimer la catégorie">
+                                🗑️ <span>Supprimer</span>
+                            </button>
+                        </form>
                     </li>
                 @empty
                     <li class="empty-message">Aucune catégorie enregistrée pour le moment.</li>
